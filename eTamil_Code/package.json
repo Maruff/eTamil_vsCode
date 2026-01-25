@@ -11,10 +11,10 @@
   "homepage": "https://eTamil.in",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Maruff/etamil_compiler"
+    "url": "https://github.com/Maruff/etamil-vscode"
   },
   "bugs": {
-    "url": "https://github.com/Maruff/etamil_compiler/issues"
+    "url": "https://github.com/Maruff/etamil-vscode/issues"
   },
   "engines": {
     "vscode": "^1.84.0"

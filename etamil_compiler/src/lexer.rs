@@ -94,7 +94,6 @@ pub enum Token {
     #[regex("தாவு|qAvu")] Switch,
     #[regex("நிகழ்வு|Nikazvu")] Case,
     #[regex("இயல்பு|iyalpu")] Default,
-    #[regex("அக|aka")] In,
 
     // --- File I/O Operations ---
     #[regex("கோப்பு|kOppu|_file")] File,
@@ -218,6 +217,11 @@ pub enum Token {
     #[token("&&")] And,
     #[token("||")] Or,
     #[token("!")] Not,
+    #[token("~")] In,
+    #[token("!~")] NotIn,
+    
+    
+
 
     // --- Operators & Symbols ---
     #[token("=")] Assign,
@@ -232,6 +236,8 @@ pub enum Token {
     #[token("}")] RBrace,
     #[token(",")] Comma,
     #[token(";")] Semicolon,
+    #[token("u")] Union,
+    #[token("n")] Intersection,
 }
 
 

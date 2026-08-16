@@ -956,6 +956,14 @@ impl Compiler {
                     let f64_type = LLVMDoubleTypeInContext(self.context);
                     LLVMConstReal(f64_type, *n)
                 }
+                Expr::String(s) => {
+                    let cstr = CString::new(s.as_str()).unwrap();
+                    LLVMBuildGlobalStringPtr(
+                        self.builder,
+                        cstr.as_ptr(),
+                        CString::new("str_const").unwrap().as_ptr(),
+                    )
+                }
                 Expr::Variable(name) => {
                     if let Some(var_ptr) = self.variables.get(name) {
                         let f64_type = LLVMDoubleTypeInContext(self.context);

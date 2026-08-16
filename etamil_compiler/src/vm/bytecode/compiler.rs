@@ -34,9 +34,24 @@ impl BytecodeCompiler {
                 self.bytecode.push(Instruction::Print);
             }
             Stmt::Input(expr) => {
-                self.bytecode.push(Instruction::Input);
-                if let Expr::Variable(name) = expr {
-                    self.bytecode.push(Instruction::StoreVar(name));
+                match expr {
+                    Expr::Variable(name) => {
+                        self.bytecode.push(Instruction::Input);
+                        self.bytecode.push(Instruction::StoreVar(name));
+                    }
+                    Expr::Concat { left, right } => {
+                        if let Expr::Variable(name) = *right {
+                            self.compile_expr(*left);
+                            self.bytecode.push(Instruction::Print);
+                            self.bytecode.push(Instruction::Input);
+                            self.bytecode.push(Instruction::StoreVar(name));
+                        } else {
+                            self.bytecode.push(Instruction::Input);
+                        }
+                    }
+                    _ => {
+                        self.bytecode.push(Instruction::Input);
+                    }
                 }
             }
             Stmt::If { condition, then_branch, else_branch } => {
@@ -124,6 +139,9 @@ impl BytecodeCompiler {
         match expr {
             Expr::Number(n) => {
                 self.bytecode.push(Instruction::Push(Value::Number(n)));
+            }
+            Expr::String(s) => {
+                self.bytecode.push(Instruction::Push(Value::String(s)));
             }
             Expr::Variable(name) => {
                 self.bytecode.push(Instruction::LoadVar(name));

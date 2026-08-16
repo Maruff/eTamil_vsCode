@@ -76,13 +76,12 @@ pub enum Token {
     #[regex("இன்றேல்|inREl")] Else,
     #[regex("சுற்று|cuRRu")] Loop,
     #[regex("அச்சு|accu")] Print,
-    #[regex("உள்ளிடு|uLLitu")] Input,
+    #[regex("பெறு|peRu|உள்ளிடு|uLLitu")] Input,
     #[regex("தடை|qatY")] Break,
     #[regex("தொடர்|qotar")] Continue,
     #[regex("மீள்|mIL")] Return,
     #[regex("செயல்|ceyal")] Function,
     #[regex("அழை|azY")] Call,
-    #[regex("முறை|muRY")] Method,
     #[regex("வகு|vaku")] Class,
     #[regex("உருவம்|uruvam")] Object,
     #[regex("புதிய|putiya")] New,
@@ -175,7 +174,8 @@ pub enum Token {
     #[regex("புரவலன்|puravalan|_host")] Host,
     #[regex("குதை|kuqY|_port")] Port,
     #[regex("முறை|muRY|_method")] Method,
-    #[regex("பெறு|peRu|_get")] HttpGet,
+    #[regex("கோரிப்பெறு|kOrippeRu|_get|GET")]
+    HttpGet,
     #[regex("பதி|paqi|_post")] HttpPost,
     #[regex("இடு|itu|_put")] HttpPut,
     #[regex("அழி|azi|_delete")] HttpDelete,
@@ -204,7 +204,7 @@ pub enum Token {
         num_str.parse::<f64>().ok().map(|n| n / 100.0)
     })] Percentage(f64),
     #[regex(r"[0-9]+(\.[0-9]+)?", |lex| lex.slice().parse::<f64>().ok())] Number(f64),
-    #[regex(r#""([^"\\]|\\.)*""#, |lex| lex.slice().to_string())] String(String),
+    #[regex(r#""([^"\\]|\\.)*""#, |lex| lex.slice()[1..lex.slice().len() - 1].to_string())] String(String),
     #[regex(r"[\u0B80-\u0BFFa-zA-Z_][\u0B80-\u0BFFa-zA-Z0-9_]*", |lex| lex.slice().to_string())] Identifier(String),
 
     // --- Comparison Operators (New: Required for Conditionals) ---
@@ -236,8 +236,6 @@ pub enum Token {
     #[token("}")] RBrace,
     #[token(",")] Comma,
     #[token(";")] Semicolon,
-    #[token("u")] Union,
-    #[token("n")] Intersection,
 }
 
 

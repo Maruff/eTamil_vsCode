@@ -127,7 +127,12 @@ impl VM {
                     let mut input = String::new();
                     std::io::stdin().read_line(&mut input)
                         .map_err(|e| e.to_string())?;
-                    self.stack.push(Value::String(input.trim().to_string()));
+                    let trimmed = input.trim();
+                    if let Ok(number) = trimmed.parse::<f64>() {
+                        self.stack.push(Value::Number(number));
+                    } else {
+                        self.stack.push(Value::String(trimmed.to_string()));
+                    }
                 }
                 Instruction::JumpIfFalse(target) => {
                     if let Some(value) = self.stack.pop() {

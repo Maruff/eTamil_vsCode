@@ -1,0 +1,84 @@
+# The extension is generated from the compiler and tested against it.
+#
+# Four of its test files read the compiler repository as a sibling —
+# ../../scripts/package_extension.py, ../../examples, ../../nUlakam — because
+# the extension lived inside that repository until it was split out. Rather
+# than rewrite those tests to reach somewhere else, CI reproduces the layout
+# they were written for: eTamil_lang at the workspace root, this repository
+# checked out into eTamil_Code beneath it, exactly where it used to sit.
+#
+# That also means `generate_editor_support.py --check` works unchanged. It
+# writes into eTamil_Code/, which here is this repository, so the drift gate
+# still fails when a keyword lands in lexer.rs without the grammar being
+# regenerated — the same guarantee as before the split, across two repos.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  extension:
+    name: extension
+    runs-on: ubuntu-latest
+
+    steps:
+      # The compiler repository is the root, because the tests expect to find
+      # it two directories above themselves.
+      - name: Check out the compiler
+        uses: actions/checkout@v4
+        with:
+          repository: Maruff/eTamil_lang
+          path: .
+
+      - name: Check out this extension where it used to live
+        uses: actions/checkout@v4
+        with:
+          path: eTamil_Code
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: etamil_compiler
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: eTamil_Code/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # The grammar and completion data in this repository are generated from
+      # the compiler's lexer. If they have drifted, say so here rather than
+      # shipping a grammar that disagrees with the language.
+      - name: Generated editor data matches the compiler
+        run: python scripts/generate_editor_support.py --check
+
+      - name: Install dependencies
+        working-directory: eTamil_Code
+        run: npm ci
+
+      - name: Typecheck
+        working-directory: eTamil_Code
+        run: npm run build
+
+      - name: Lint
+        working-directory: eTamil_Code
+        run: npm run lint
+
+      # The snippet tests compile every template with the real binary, so the
+      # compiler has to exist before they run.
+      - name: Build the compiler
+        working-directory: etamil_compiler
+        run: cargo build --release
+
+      - name: Test the grammar and the snippets
+        working-directory: eTamil_Code
+        run: npm test

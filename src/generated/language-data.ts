@@ -17950,6 +17950,20 @@ export const FUNCTIONS: readonly FunctionEntry[] = [
     "line": 122
   },
   {
+    "name": "பிளந்த_குறிகளை_இணை",
+    "forms": [
+      "பிளந்த_குறிகளை_இணை"
+    ],
+    "params": [
+      "ஆவணம்"
+    ],
+    "arity": 1,
+    "doc": "பிளந்த_குறிகளை_இணை(ஆவணம்) — rejoin the placeholders Word has split across runs",
+    "kind": "stdlib",
+    "module": "nUlakam/vativam/AvaNam.qmz",
+    "line": 195
+  },
+  {
     "name": "பொதியை_நிரப்பு",
     "forms": [
       "பொதியை_நிரப்பு"
@@ -17965,7 +17979,7 @@ export const FUNCTIONS: readonly FunctionEntry[] = [
     "doc": "பொதியை_நிரப்பு(மூலப்_பொதி, விடைப்_பொதி, வடிவம், மதிப்புகள், தொகுதிகள்) — render the document inside a package",
     "kind": "stdlib",
     "module": "nUlakam/vativam/AvaNam.qmz",
-    "line": 190
+    "line": 249
   },
   {
     "name": "_pdf_ஆக்கு",
@@ -17981,7 +17995,7 @@ export const FUNCTIONS: readonly FunctionEntry[] = [
     "doc": "The PDF of a rendered package. LibreOffice does the conversion, so",
     "kind": "stdlib",
     "module": "nUlakam/vativam/AvaNam.qmz",
-    "line": 205
+    "line": 264
   },
   {
     "name": "எழுத்து_மறை",

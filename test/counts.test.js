@@ -77,49 +77,33 @@ describe('the README', { skip: available ? false : 'run npm run build' }, () => 
   }
 
   test('the example count is right, spelled out', () => {
-    // Written as a word on the page, so it needs the small table rather than a
-    // regex on digits. Worth checking: it is claimed twice.
-    const WORDS = {
-      'twenty-seven': 27,
-      'twenty-eight': 28,
-      'twenty-nine': 29,
-      thirty: 30,
-      'thirty-one': 31,
-      'thirty-two': 32,
-      'thirty-three': 33,
-      'thirty-four': 34,
-      'thirty-five': 35,
-      'thirty-six': 36,
-      'thirty-seven': 37,
-      'thirty-eight': 38,
-      'thirty-nine': 39,
-      forty: 40,
-      'forty-one': 41,
-      'forty-two': 42,
-      'forty-three': 43,
-      'forty-four': 44,
-      'forty-five': 45,
-    };
+    // Written as a word on the page, and claimed in more than one sentence.
+    // Read from the phrases that carry it -- the same ones the compiler's
+    // fix_extension_counts.py rewrites -- and compared with the count spelled
+    // out, so no table has to grow with the examples.
     const examples = countExamples();
-    // Whole words: "thirty-two" contains "thirty", and a substring match
-    // read that as a second, wrong, claim.
-    const claimed = Object.keys(WORDS).filter((word) =>
-      new RegExp(`(?<![A-Za-z0-9_-])${word}(?![A-Za-z0-9_-])`).test(readme)
-    );
-    assert.ok(
-      claimed.length > 0,
-      `the README claims no example count near ${examples} — ` +
-        'add the word to WORDS here if the number outgrew the table'
-    );
+    const WORD = '([a-z]+(?:-[a-z]+)?(?: hundred(?: and [a-z]+(?:-[a-z]+)?)?)?)';
+    const claimed = [
+      ...readme.matchAll(new RegExp(`${WORD} example programs`, 'g')),
+      ...readme.matchAll(new RegExp(`— ${WORD} programs, carried`, 'g')),
+    ].map((match) => match[1]);
+    assert.ok(claimed.length > 0, `the README claims no example count; there are ${examples}`);
     for (const word of claimed) {
-      assert.equal(
-        WORDS[word],
-        examples,
-        `README says "${word}" example programs; there are ${examples}`
-      );
+      assert.equal(word, spelled(examples), `README says "${word}" example programs; there are ${examples}`);
     }
   });
 });
+
+/** A whole number from 1 to 999 as English words: forty-three. */
+function spelled(number) {
+  const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+    'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+  const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  if (number < 20) return units[number];
+  if (number < 100) return tens[Math.floor(number / 10)] + (number % 10 ? '-' + units[number % 10] : '');
+  const rest = number % 100;
+  return units[Math.floor(number / 100)] + ' hundred' + (rest ? ' and ' + spelled(rest) : '');
+}
 
 /** How many `.qmz` files the packaging script would carry. */
 function countExamples() {

@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- An experimental language server client. With `etamil.languageServer.enabled`,
+  diagnostics come from `etamil-lsp`, which answers from the compiler's own
+  front end, instead of running `etamil --check` on each change. It is off by
+  default, because the release packages do not carry the server yet, and it
+  falls back to the built-in checks whenever the server is missing or fails to
+  start. Completion, hover and definition stay with the extension's own
+  providers, which know the keywords, builtins and the standard library.
+- `vscode-languageclient` is now a runtime dependency, so `node_modules` is no
+  longer excluded from the VSIX (`vsce` packages only production dependencies).
+
 ## 1.4.2
 
 ### Changed

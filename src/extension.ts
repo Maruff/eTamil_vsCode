@@ -38,6 +38,7 @@ import { check, toPosition } from './compiler';
 import { openExample, showDocumentation } from './docs';
 import { installFont } from './fontinstall';
 import { registerScriptFont } from './fonts';
+import { startLanguageServer, stopLanguageServer } from './languageServer';
 import {
   COVERAGE,
   completionProvider,
@@ -156,12 +157,20 @@ export function activate(context: vscode.ExtensionContext): void {
   registerLanguageFeatures(context);
   registerScriptFont(context, output);
   registerScriptMode(context, output);
-  registerDiagnostics(context);
+  // The server owns diagnostics when it runs; the built-in checks are the
+  // fallback, and are put back if the server was started and then could not run.
+  const serverOwnsDiagnostics = startLanguageServer(context, output, () =>
+    registerDiagnostics(context)
+  );
+  if (!serverOwnsDiagnostics) {
+    registerDiagnostics(context);
+  }
   registerCommands(context);
 }
 
-export function deactivate(): void {
+export async function deactivate(): Promise<void> {
   diagnostics?.dispose();
+  await stopLanguageServer();
 }
 
 // ---------------------------------------------------------------------------

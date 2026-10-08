@@ -127,6 +127,11 @@ Rust, no download, no `PATH`. The Marketplace sends you the build for your
 machine; installing a `.vsix` by hand means picking the one whose name ends in
 your platform, `etamil-support-1.0.0-win32-x64.vsix`.
 
+**Cursor, Windsurf and VSCodium** install from [Open VSX](https://open-vsx.org), not
+from the Visual Studio Marketplace, so the extension has to be published there as
+well (see [PUBLISHING.md](PUBLISHING.md)). Where it is not listed yet, install the
+`.vsix` by hand as above.
+
 Three things are worth knowing about it.
 
 **Your own compiler wins.** Set `etamil.compilerPath` and that is what runs — a

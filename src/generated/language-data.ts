@@ -3987,6 +3987,20 @@ export const FUNCTIONS: readonly FunctionEntry[] = [
     "line": null
   },
   {
+    "name": "தளம்_செயல்_பதிவு",
+    "forms": [
+      "தளம்_செயல்_பதிவு",
+      "qaLam_ceyal_paqivu",
+      "_registerFunction"
+    ],
+    "params": null,
+    "arity": 3,
+    "doc": "தளம்_செயல்_பதிவு(பெயர், செயல், எண்ணிக்கை) — let queries on the",
+    "kind": "builtin",
+    "module": null,
+    "line": null
+  },
+  {
     "name": "கடவுச்சொல்_மறை",
     "forms": [
       "கடவுச்சொல்_மறை",

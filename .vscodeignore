@@ -4,7 +4,6 @@ test/**
 tsconfig.json
 .eslintrc.json
 .github/**
-node_modules/**
 out/**/*.map
 **/*.tsbuildinfo
 

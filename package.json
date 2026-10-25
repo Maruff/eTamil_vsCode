@@ -193,6 +193,18 @@
           "scope": "machine",
           "markdownDescription": "OpenType features to ask the **eTamil** font for, where `#etamil.eTamilFont#` is set. Empty or `normal` asks for none.\n\nA *smart* build of the font carries contextual rules in `calt`: the pulli appears on a consonant that no vowel follows, a vowel after a consonant shrinks to its sign, and the inherent `a` draws nothing, so `vaNakkam` is read as வணக்கம். The plain `ican qamiz` has no such rules and is unaffected by this setting.\n\nThese are declared on the eTamil spans themselves, not through `#editor.fontLigatures#`. That option is off by default and, while it is off, VS Code disables `calt` for every font; turning it on would change how every other file in the editor is drawn. This setting changes nothing outside eTamil-script ASCII.\n\nA `font-feature-settings` value: quoted four-letter tags, each optionally followed by `on`, `off` or a number. Checked before use, because it is interpolated into the decoration's CSS."
         },
+        "etamil.languageServer.enabled": {
+          "type": "boolean",
+          "default": false,
+          "scope": "machine",
+          "markdownDescription": "Use the eTamil language server (`etamil-lsp`) for diagnostics, instead of running `etamil --check` on each change. Experimental. The server is found through `#etamil.languageServer.path#`, then beside the compiler this extension carries (packages built since the server was added carry one), then the `PATH`. If it cannot be found or cannot start, the built-in checks are used and nothing is lost.\n\nEditor restart or reload required."
+        },
+        "etamil.languageServer.path": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "markdownDescription": "Path to the `etamil-lsp` binary. Empty means the one beside the compiler carried in this extension, then `etamil-lsp` on the `PATH`. Machine-scoped on purpose, like `#etamil.compilerPath#`: this names an executable the extension runs, so a workspace must not be able to set it."
+        },
         "etamil.checkOnType": {
           "type": "boolean",
           "default": true,
@@ -223,7 +235,7 @@
     "build": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "lint": "eslint src --ext .ts",
-    "test": "node --test test/grammar.test.js test/snippets.test.js test/errors.test.js test/marks.test.js test/scriptMode.test.js test/bundle.test.js test/links.test.js test/counts.test.js",
+    "test": "node --test test/grammar.test.js test/snippets.test.js test/errors.test.js test/marks.test.js test/scriptMode.test.js test/bundle.test.js test/links.test.js test/counts.test.js test/serverPath.test.js",
     "verify": "npm run check:generated && npm run build && npm run lint && npm run test",
     "stage": "python ../scripts/package_extension.py --stage",
     "package": "vsce package",
@@ -240,5 +252,8 @@
     "typescript": "^5.4.0",
     "vscode-oniguruma": "^2.0.1",
     "vscode-textmate": "^9.0.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
   }
 }

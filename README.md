@@ -205,6 +205,8 @@ that does. The language side is in the repository's `docs/artino.md`.
 | `etamil.compilerPath` | *(carried, then PATH)* | Path to the `etamil` binary. Machine-scoped, because it names an executable the extension runs |
 | `etamil.eTamilFont` | *(off)* | Font for ASCII that is eTamil rather than English — `ican qamiz` and `ican qamiz Smart` ship with the extension, see below |
 | `etamil.checkOnType` | `true` | Report errors while you type |
+| `etamil.languageServer.enabled` | `false` | Experimental: take diagnostics from the `etamil-lsp` language server instead of running `etamil --check`. Falls back to the built-in checks if the server is not found or cannot start. A package built since the server joined the release archives carries it |
+| `etamil.languageServer.path` | empty | Path to `etamil-lsp`; empty looks beside the carried compiler, then on the `PATH`. Machine-scoped |
 | `etamil.intelliSense` | `true` | Completions and signature help |
 
 ## Two scripts in one file
